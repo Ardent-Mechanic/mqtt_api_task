@@ -14,7 +14,7 @@ class RunConfig(BaseModel):
 
 class ApiV1Prefix(BaseModel):
     prefix: str = "/v1"
-    test: str = "/test"
+    metric: str = "/metric"
 
 
 class ApiPrefix(BaseModel):
@@ -23,9 +23,9 @@ class ApiPrefix(BaseModel):
 
 
 class MQTTConfig(BaseModel):
-    host: str = "broker.hivemq.com"
+    host: str = "dev.rvts.ru"
     port: int = 1883
-    topic: str = "test/topic"
+    topic: str = "sensor/802241/data"
     username: Optional[str] = None
     password: Optional[SecretStr] = None
 

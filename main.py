@@ -1,11 +1,16 @@
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import FastAPI
 
-from config import settings
-from mqtt_client_test import client as mqtt_client_test, message
+from core.config import settings
+from utils.mqtt_client_test import client as mqtt_client_test
 import threading
+from api import router as api_router
 
 app = FastAPI()
+
+app.include_router(api_router)
 
 
 # Функция для запуска MQTT клиента в отдельном потоке
@@ -20,18 +25,6 @@ def startup_event():
     mqtt_thread = threading.Thread(target=start_mqtt)
     mqtt_thread.daemon = True
     mqtt_thread.start()
-
-
-# Пример API-метода для публикации сообщений
-@app.post("/publish/")
-async def publish_message(topic: str = "test/topic", message: str = "Hello, MQTT!"):
-    mqtt_client_test.publish(topic, message)
-    return {"status": "Message published", "topic": topic, "message": message}
-
-
-@app.get("/messages/")
-async def get_messages():
-    return {"messages": message}
 
 
 if __name__ == "__main__":

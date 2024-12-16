@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 
-from config import settings
+from core.config import settings
 
 # MQTT_BROKER = "dev.rvts.ru"  # Адрес вашего брокера
 # MQTT_PORT = 1883  # Порт брокера
@@ -8,7 +8,7 @@ from config import settings
 
 
 # Типо база данных
-message = []
+metric_arr = []
 
 
 # Callback при подключении
@@ -19,9 +19,11 @@ def on_connect(client, userdata, flags, rc):
 
 # Callback при получении сообщения
 def on_message(client, userdata, msg):
-    global message
-    print(f"Received message: {msg.payload.decode()} on topic: {msg.topic}")
-    message.append({"topic": msg.topic, "message": msg.payload.decode()})
+    print('123321')
+    global metric_arr
+    # print(f"Received message: {msg.payload.decode()} on topic: {msg.topic}")
+    metric_arr.append({"topic": msg.topic, "message": msg.payload.decode()})
+    print(metric_arr)
 
 
 # Создание MQTT клиента
