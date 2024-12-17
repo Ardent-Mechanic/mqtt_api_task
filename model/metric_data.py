@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from sqlalchemy import String, Integer, DateTime
+from sqlalchemy import String, Integer, DateTime, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from db import Base
+from model.base import Base
 
 
 class MetricData(Base):
@@ -12,5 +12,5 @@ class MetricData(Base):
     time: Mapped[datetime] = mapped_column(DateTime)
     event: Mapped[str] = mapped_column(String(50))
     type: Mapped[str] = mapped_column(String(50))
-    value: Mapped[str] = mapped_column(String(5))
+    value: Mapped[float] = mapped_column(Float)
     mc: Mapped[bool] = mapped_column(Integer)

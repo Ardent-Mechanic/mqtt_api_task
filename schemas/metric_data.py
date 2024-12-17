@@ -10,7 +10,7 @@ class MetricDataBase(BaseModel):
     time: datetime
     event: str
     type: str
-    value: str
+    value: float
     mc: int
 
     class Config:
