@@ -7,21 +7,25 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.operators import and_
 
 from model.metric_data import MetricData
+from schemas import GetMetricData, MetricDataBase
+from utils import convert_to_date
 
 
-# async def get_metrics_by_date(
-#         session: AsyncSession,
-#         start_date: str,
-#         end_date: str
-# ) -> GetMetricData:
-#     """Не знаю как сравниваются даты ( """
-#     s_date = convert_to_date(start_date)
-#     e_date = convert_to_date(end_date)
-#     stmt = select(MetricDataBase).where(and_(MetricDataBase.time >= s_date, MetricDataBase.time <= e_date))
-#     result = await session.scalars(stmt)
-#     return result.one()
+async def get_metrics_by_date(
+        session: AsyncSession,
+        start_date: str,
+        end_date: str
+) -> Sequence[MetricData]:
+    """ Теперт знаю :3 """
+    conv_start_date = convert_to_date(start_date)
+    conv_end_date = convert_to_date(end_date)
+    print(start_date, end_date)
+    stmt = select(MetricData).where(and_(MetricData.time >= conv_start_date, MetricData.time <= conv_end_date))
+    result = await session.scalars(stmt)
+    return result.all()
 
 
+# Добавить информацию о том что данные отправлены в output
 async def put_metrics(
         session: AsyncSession,
         metrics: str
@@ -35,6 +39,5 @@ async def put_metrics(
                              value=data['value'],
                              mc=data['mc'])
 
-    # print(metric)
     session.add(metric_info)
     await session.commit()

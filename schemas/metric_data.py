@@ -18,4 +18,5 @@ class MetricDataBase(BaseModel):
 
 
 class GetMetricData(BaseModel):
-    time: str
+    datetime_start: str
+    datetime_end: str
