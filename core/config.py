@@ -22,6 +22,29 @@ class ApiPrefix(BaseModel):
     v1: ApiV1Prefix = ApiV1Prefix()
 
 
+class DatabaseConfig(BaseModel):
+    url: str
+    # password: SecretStr = 'root'
+    echo: bool = False
+    echo_pool: bool = False
+    pool_size: int = 50
+    max_overflow: int = 10
+
+    naming_convention: dict[str, str] = {
+        "ix": "ix_%(column_0_label)s",
+        "uq": "uq_%(table_name)s_%(column_0_name)s",
+        "ck": "ck_%(table_name)s_%(constraint_name)s",
+        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+        "pk": "pk_%(table_name)s"
+    }
+
+    @field_validator('url')
+    def validate_url(cls, v):
+        if not v.startswith("postgresql+asyncpg://"):
+            raise ValueError("URL должен начинаться с 'postgresql+asyncpg://'")
+        return v
+
+
 class MQTTConfig(BaseModel):
     host: str = "dev.rvts.ru"
     port: int = 1883
@@ -40,6 +63,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
     mqtt_config: MQTTConfig = MQTTConfig()
+    db: DatabaseConfig
 
 
 settings = Settings()
