@@ -15,19 +15,19 @@ class GetMetricData(BaseModel):
     datetime_start: str = Field(
         ...,
         description="Начальная дата и время периода",
-        example="2024-06-17 00:00:00"
+        example="2024-12-01 00:00:00"
     )
     datetime_end: str = Field(
         ...,
         description="Конечная дата и время периода ",
-        example="2024-06-18 00:00:00"
+        example="2024-12-18 00:00:00"
     )
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                "datetime_start": "2024-06-17 00:00:00",
-                "datetime_end": "2024-06-18 00:00:00"
+                "datetime_start": "2024-12-01 00:00:00",
+                "datetime_end": "2024-12-18 00:00:00"
             }
         }
 

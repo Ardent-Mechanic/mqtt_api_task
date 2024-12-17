@@ -29,10 +29,11 @@ async def put_metrics(
         session: AsyncSession,
         metrics: str
 ) -> None:
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     data = json.loads(metrics)
     metric_info = MetricData(id=data['id'],
                              bs_id=data['bs_id'],
-                             time=datetime.fromtimestamp(data['time']),
+                             time=data['time'],
                              event=data['event'],
                              type=data['type'],
                              value=data['value'],

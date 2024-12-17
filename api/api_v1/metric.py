@@ -28,7 +28,7 @@ async def publish_message(message: MetricDataCreate,
     - **topic**: Топик для публикации (по умолчанию из настроек).
     - **message**: Сообщение в формате строки, которое будет отправлено.
     """
-    mqtt_client_test.publish(topic, message)
+    mqtt_client_test.publish(topic, message.data)
     return {"status": "Message published", "topic": topic, "message": message}
 
 
