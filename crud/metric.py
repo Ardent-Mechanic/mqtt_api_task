@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.operators import and_
 
 from model.metric_data import MetricData
-from schemas import GetMetricData, MetricDataBase
 from utils import convert_to_date
 
 
