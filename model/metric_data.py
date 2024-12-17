@@ -1,4 +1,6 @@
-from sqlalchemy import String, Integer
+from datetime import datetime
+
+from sqlalchemy import String, Integer, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from db import Base
@@ -7,7 +9,7 @@ from db import Base
 class MetricData(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, unique=True)
     bs_id: Mapped[int] = mapped_column(Integer, unique=True)
-    time: Mapped[str] = mapped_column(String(50))
+    time: Mapped[datetime] = mapped_column(DateTime)
     event: Mapped[str] = mapped_column(String(50))
     type: Mapped[str] = mapped_column(String(50))
     value: Mapped[str] = mapped_column(String(5))
