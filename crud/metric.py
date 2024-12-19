@@ -33,7 +33,7 @@ async def put_metrics(
     data = json.loads(metrics)
     metric_info = MetricData(id=data['id'],
                              bs_id=data['bs_id'],
-                             time=data['time'],
+                             time=datetime.utcfromtimestamp(data['time']),
                              event=data['event'],
                              type=data['type'],
                              value=data['value'],

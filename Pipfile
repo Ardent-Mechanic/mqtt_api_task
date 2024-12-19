@@ -4,13 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-paho-mqtt = "==2.1.0"
 fastapi = "==0.115.6"
 uvicorn = "==0.34.0"
 pydantic-settings = "==2.7.0"
 sqlalchemy = {extras = ["asyncio"], version = "==2.0.36"}
 asyncpg = "==0.30.0"
 alembic = "==1.14.0"
+gmqtt = "==0.7.0"
 
 [dev-packages]
 black = "==24.10.0"

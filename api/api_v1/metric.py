@@ -9,16 +9,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from crud.metric import get_metrics_by_date
 from db import db_session
+
 from schemas import GetMetricData, MetricDataCreate
-from utils.mqtt_client_test import client as mqtt_client_test
 from core.config import settings
+from utils.mqtt_client_test import mqtt_handler
 
 router = APIRouter(tags=["Metric"])
 
 
 @router.post("test/publish/", summary="Публикация сообщения в MQTT", tags=["SEND"])
 async def publish_message(message: MetricDataCreate,
-                          topic: str = settings.mqtt_config.topic
+                          session: Annotated[
+                              AsyncSession,
+                              Depends(db_session.session_getter),
+                          ],
+                          topic: str = settings.mqtt_config.topic,
+
                           ):
     """
     Метод сделан для отладки, так как в указанный топик не приходят данные.
@@ -28,7 +34,7 @@ async def publish_message(message: MetricDataCreate,
     - **topic**: Топик для публикации (по умолчанию из настроек).
     - **message**: Сообщение в формате строки, которое будет отправлено.
     """
-    mqtt_client_test.publish(topic, message.data)
+    await mqtt_handler.on_message(settings.mqtt_config.topic, message.data, session=session)
     return {"status": "Message published", "topic": topic, "message": message}
 
 

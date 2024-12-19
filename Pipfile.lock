@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "15c5377d60e9480d78a6513eebe00038a4bab5c247d023eabde6fea6c8375d35"
+            "sha256": "7a037a612272cb47b66b42ded9e6cdcc959f3e826d58e133e9fe0c9706e7d4a6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -121,6 +121,15 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==0.115.6"
+        },
+        "gmqtt": {
+            "hashes": [
+                "sha256:3e5571a20e9c115d83d600caa228b06f716087653e241035e29cec73277b52cc",
+                "sha256:bedfec7bac26b6b4ce1f0c4c32cff3d663526a54c882d323d41560fc3b9b44a2"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.5'",
+            "version": "==0.7.0"
         },
         "greenlet": {
             "hashes": [
@@ -291,15 +300,6 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==3.0.2"
-        },
-        "paho-mqtt": {
-            "hashes": [
-                "sha256:12d6e7511d4137555a3f6ea167ae846af2c7357b10bc6fa4f7c3968fc1723834",
-                "sha256:6db9ba9b34ed5bc6b6e3812718c7e06e2fd7444540df2455d2c51bd58808feee"
-            ],
-            "index": "pypi",
-            "markers": "python_version >= '3.7'",
-            "version": "==2.1.0"
         },
         "pydantic": {
             "hashes": [
