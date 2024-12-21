@@ -14,4 +14,4 @@ class MetricData(Base):
     event: Mapped[str] = mapped_column(String(50))
     type: Mapped[str] = mapped_column(String(50))
     value: Mapped[float] = mapped_column(Float)
-    mc: Mapped[bool] = mapped_column(Integer)
+    mc: Mapped[bool] = mapped_column(Integer, nullable=True)
