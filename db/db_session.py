@@ -37,7 +37,13 @@ class DataBaseSession:
 
     async def session_getter(self) -> AsyncGenerator[AsyncSession, None]:
         async with self.session_factory() as session:
-            yield session
+            try:
+                yield session  # Передача управления вызывающему коду
+            except Exception as e:
+                await session.rollback()  # Откат транзакции в случае ошибки
+                raise e
+            finally:
+                await session.close()  # Корректное закрытие сессии
 
 
 # Пример строки подключения для aiomysql

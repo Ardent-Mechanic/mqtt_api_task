@@ -34,9 +34,15 @@ async def home_message(client: MQTTClient, topic: str, payload: bytes, qos: int,
 
 @fast_mqtt.on_message()
 async def message(client: MQTTClient, topic: str, payload: bytes, qos: int, properties: Any):
-    print("Received message: ", topic, payload.decode(), qos, properties)
+    # print("Received message: ", topic, payload.decode(), qos, properties)
     # session = await db_session.session_getter().__anext__()
     # await put_metrics(session, payload.decode().split("}")[0] + "}")
+    async for session in db_session.session_getter():  # Используем session_getter
+        try:
+            data = payload.decode().split("}")[0] + "}"
+            await put_metrics(session, data)  # Обработка данных
+        except Exception as e:
+            print(f"Error processing message: {e}")
 
 
 @fast_mqtt.subscribe("my/mqtt/topic/#", qos=2)
