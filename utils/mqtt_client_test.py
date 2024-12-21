@@ -1,5 +1,6 @@
 # MQTT обработчик
 import asyncio
+from typing import Any
 
 from core.config import settings
 from gmqtt import Client as MQTTClient
@@ -7,30 +8,51 @@ from gmqtt import Client as MQTTClient
 from crud.metric import put_metrics
 from db import db_session
 
+import asyncio
+from gmqtt import Client as MQTTClient
+from fastapi_mqtt import FastMQTT, MQTTConfig
 
-class MQTTHandler:
-    def __init__(self):
-        self.client = MQTTClient("unique_client_id")
-        self.client.on_connect = self.on_connect
-        self.client.on_message = self.on_message
-        self.client.on_disconnect = self.on_disconnect
+mqtt_config = MQTTConfig(
+    host=settings.mqtt_config.host,
+    port=1883,
+    keepalive=60,
+)
 
-    async def connect(self):
-        await self.client.connect(settings.mqtt_config.broker, port=settings.mqtt_config.port)
-        await asyncio.Future()  # Держим соединение открытым
-
-    async def on_connect(self, client, flags, rc, properties):
-        print(f"Connected with result code {rc}")
-        self.client.subscribe(settings.mqtt_config.topic, qos=1)
-
-    async def on_disconnect(self, client, packet, exc=None):
-        print("Disconnected")
-
-    async def on_message(self, topic, payload, session=None):
-        print(f"Received message: {payload} on topic: {topic}")
-        if session is None:
-            session = await db_session.session_getter().__anext__()
-        await put_metrics(session, payload)
+fast_mqtt = FastMQTT(config=mqtt_config)
 
 
-mqtt_handler = MQTTHandler()
+@fast_mqtt.on_connect()
+def connect(client: MQTTClient, flags: int, rc: int, properties: Any):
+    client.subscribe("/mqtt")  # subscribing mqtt topic
+    print("Connected: ", client, flags, rc, properties)
+
+
+@fast_mqtt.subscribe(settings.mqtt_config.topic, qos=1)
+async def home_message(client: MQTTClient, topic: str, payload: bytes, qos: int, properties: Any):
+    print("temperature/humidity: ", topic, payload.decode(), qos, properties)
+
+
+@fast_mqtt.on_message()
+async def message(client: MQTTClient, topic: str, payload: bytes, qos: int, properties: Any):
+    print("Received message: ", topic, payload.decode(), qos, properties)
+    # session = await db_session.session_getter().__anext__()
+    # await put_metrics(session, payload.decode().split("}")[0] + "}")
+
+
+@fast_mqtt.subscribe("my/mqtt/topic/#", qos=2)
+async def message_to_topic_with_high_qos(
+        client: MQTTClient, topic: str, payload: bytes, qos: int, properties: Any
+):
+    print(
+        "Received message to specific topic and QoS=2: ", topic, payload.decode(), qos, properties
+    )
+
+
+@fast_mqtt.on_disconnect()
+def disconnect(client: MQTTClient, packet, exc=None):
+    print("Disconnected")
+
+
+@fast_mqtt.on_subscribe()
+def subscribe(client: MQTTClient, mid: int, qos: int, properties: Any):
+    print("subscribed", client, mid, qos, properties)
