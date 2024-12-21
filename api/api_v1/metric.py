@@ -12,30 +12,7 @@ from db import db_session
 
 from schemas import GetMetricData, MetricDataCreate
 from core.config import settings
-from utils.mqtt_client_test import mqtt_handler
-
 router = APIRouter(tags=["Metric"])
-
-
-@router.post("test/publish/", summary="Публикация сообщения в MQTT", tags=["SEND"])
-async def publish_message(message: MetricDataCreate,
-                          session: Annotated[
-                              AsyncSession,
-                              Depends(db_session.session_getter),
-                          ],
-                          topic: str = settings.mqtt_config.topic,
-
-                          ):
-    """
-    Метод сделан для отладки, так как в указанный топик не приходят данные.
-
-    Публикация сообщения в указанный топик MQTT-брокера.
-
-    - **topic**: Топик для публикации (по умолчанию из настроек).
-    - **message**: Сообщение в формате строки, которое будет отправлено.
-    """
-    await mqtt_handler.on_message(settings.mqtt_config.topic, message.data, session=session)
-    return {"status": "Message published", "topic": topic, "message": message}
 
 
 @router.post("test/get_data/", summary="Получение данных по времени", tags=["GET"])
