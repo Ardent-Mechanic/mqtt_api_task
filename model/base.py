@@ -1,5 +1,5 @@
-from sqlalchemy import String, ForeignKey, MetaData
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, declared_attr, relationship
+from sqlalchemy import MetaData
+from sqlalchemy.orm import DeclarativeBase, declared_attr
 
 from core.config import settings
 from utils import camel_case_to_snake_case

@@ -1,6 +1,4 @@
 from pydantic import BaseModel, Field
-from pydantic import ConfigDict
-from datetime import datetime
 
 
 class GetMetricData(BaseModel):

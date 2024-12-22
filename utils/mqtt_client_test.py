@@ -1,14 +1,10 @@
-# MQTT обработчик
-import asyncio
 from typing import Any
 
 from core.config import settings
-from gmqtt import Client as MQTTClient
 
 from crud.metric import put_metrics
 from db import db_session
 
-import asyncio
 from gmqtt import Client as MQTTClient
 from fastapi_mqtt import FastMQTT, MQTTConfig
 
@@ -16,8 +12,7 @@ import logging.config
 
 logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
 
-# Создание логгеров
-logger_mqtt = logging.getLogger("gmqtt")  # Логгер основного приложения
+logger_mqtt = logging.getLogger("gmqtt")
 
 mqtt_config = MQTTConfig(
     host=settings.mqtt.host,

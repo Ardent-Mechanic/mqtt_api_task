@@ -10,19 +10,16 @@ from utils.mqtt_client_test import fast_mqtt
 from api import router as api_router
 
 
-# Асинхронный контекст для lifespan
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Действия при старте: подключение к MQTT и создание таблиц в БД
     await fast_mqtt.mqtt_startup()
     async with db_session.engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)  # Создание всех таблиц в БД
+        await conn.run_sync(Base.metadata.create_all)
     try:
-        yield  # Приложение работает
+        yield
     finally:
-        # Действия при завершении: отключение MQTT и завершение фона
         await fast_mqtt.mqtt_shutdown()
-        await db_session.dispose()  # Закрыть соединения с базой данных
+        await db_session.dispose()
 
 
 app = FastAPI(

@@ -11,8 +11,7 @@ import logging.config
 
 logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
 
-# Создание логгеров
-logger_db = logging.getLogger("db")  # Логгер основного приложения
+logger_db = logging.getLogger("db")
 
 
 class DataBaseSession:
@@ -24,7 +23,6 @@ class DataBaseSession:
             pool_size: int = 5,
             max_overflow: int = 10,
     ) -> None:
-        # Создаем асинхронный движок с использованием aiomysql
         self.engine: AsyncEngine = create_async_engine(
             url=url,
             echo=echo,
@@ -45,15 +43,14 @@ class DataBaseSession:
     async def session_getter(self) -> AsyncGenerator[AsyncSession, None]:
         async with self.session_factory() as session:
             try:
-                yield session  # Передача управления вызывающему коду
+                yield session
             except Exception as e:
-                await session.rollback()  # Откат транзакции в случае ошибки
+                await session.rollback()
                 logger_db.error(f"Error getting session: {e}")
             finally:
-                await session.close()  # Корректное закрытие сессии
+                await session.close()
 
 
-# Пример строки подключения для aiomysql
 db_session = DataBaseSession(
     url=settings.db.url,
     echo=settings.db.echo,
