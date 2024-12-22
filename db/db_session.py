@@ -7,6 +7,13 @@ from sqlalchemy.ext.asyncio import (
 )
 from core.config import settings
 
+import logging.config
+
+logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
+
+# Создание логгеров
+logger_db = logging.getLogger("db")  # Логгер основного приложения
+
 
 class DataBaseSession:
     def __init__(
@@ -41,7 +48,7 @@ class DataBaseSession:
                 yield session  # Передача управления вызывающему коду
             except Exception as e:
                 await session.rollback()  # Откат транзакции в случае ошибки
-                raise e
+                logger_db.error(f"Error getting session: {e}")
             finally:
                 await session.close()  # Корректное закрытие сессии
 

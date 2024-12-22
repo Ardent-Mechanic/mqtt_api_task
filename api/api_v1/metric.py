@@ -4,14 +4,13 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from pydantic import Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from crud.metric import get_metrics_by_date
 from db import db_session
 
-from schemas import GetMetricData, MetricDataCreate
-from core.config import settings
+from schemas import GetMetricData
+
 router = APIRouter(tags=["Metric"])
 
 
