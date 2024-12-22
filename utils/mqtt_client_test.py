@@ -20,8 +20,8 @@ logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
 logger_mqtt = logging.getLogger("gmqtt")  # Логгер основного приложения
 
 mqtt_config = MQTTConfig(
-    host=settings.mqtt_config.host,
-    port=1883,
+    host=settings.mqtt.host,
+    port=settings.mqtt.port,
     keepalive=60,
 )
 
@@ -30,12 +30,12 @@ fast_mqtt = FastMQTT(config=mqtt_config)
 
 @fast_mqtt.on_connect()
 def connect(client: MQTTClient, flags: int, rc: int, properties: Any):
-    logger_mqtt.info(f"Connected: {client}, {flags}, {rc}, {properties}")
+    logger_mqtt.info(f"Connected: flag={flags}, rc={rc}, properties={properties}")
 
 
-@fast_mqtt.subscribe(settings.mqtt_config.topic, qos=1)
+@fast_mqtt.subscribe(settings.mqtt.topic, qos=1)
 async def home_message(client: MQTTClient, topic: str, payload: bytes, qos: int, properties: Any):
-    logger_mqtt.info(f"Received message: {client}, {topic}, {payload.decode()}, {qos},")
+    logger_mqtt.info(f"Received message: topic={topic}, data={payload.decode()}, qos={qos}")
 
 
 @fast_mqtt.on_message()
@@ -48,20 +48,11 @@ async def message(client: MQTTClient, topic: str, payload: bytes, qos: int, prop
             logger_mqtt.error(f"Error processing message: {e}")
 
 
-@fast_mqtt.subscribe(settings.mqtt_config.topic, qos=2)
-async def message_to_topic_with_high_qos(
-        client: MQTTClient, topic: str, payload: bytes, qos: int, properties: Any
-):
-    logger_mqtt.info(
-        f"Received message to specific topic and QoS=2: {client}, {topic}, {payload.decode()}, {qos}, {properties}"
-    )
-
-
 @fast_mqtt.on_disconnect()
 def disconnect(client: MQTTClient, packet, exc=None):
-    logger_mqtt.info(f"Disconnected: {client}, {packet}")
+    logger_mqtt.info(f"Disconnected: {client}, packet={packet}")
 
 
 @fast_mqtt.on_subscribe()
 def subscribe(client: MQTTClient, mid: int, qos: int, properties: Any):
-    logger_mqtt.info(f"subscribed: {client}, {mid}, {qos}, {properties}")
+    logger_mqtt.info(f"subscribed: {settings.mqtt.topic}, mid={mid}, qos={qos}, properties={properties}")
