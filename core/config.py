@@ -48,7 +48,7 @@ class DatabaseConfig(BaseModel):
 class MQTTConfig(BaseModel):
     host: str = "dev.rvts.ru"
     port: int = 1883
-    topic: str = "sensor/802241/data"
+    topic: str = "device/sensor/#"
     username: Optional[str] = None
     password: Optional[SecretStr] = None
 
@@ -62,7 +62,7 @@ class Settings(BaseSettings):
     )
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
-    mqtt_config: MQTTConfig = MQTTConfig()
+    mqtt: MQTTConfig
     db: DatabaseConfig
 
 
